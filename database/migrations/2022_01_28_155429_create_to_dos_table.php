@@ -15,7 +15,12 @@ class CreateToDosTable extends Migration
     {
         Schema::create('to_dos', function (Blueprint $table) {
             $table->id();
+            $table->string('text');
+            $table->set('status', ['completed', 'incomplete'])->default('incomplete');
+            $table->foreignId('user_id') ->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
+
         });
     }
 
