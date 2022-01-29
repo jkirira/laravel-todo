@@ -38,7 +38,7 @@
                             @enderror
                         </div>
                         <div class="mb-6">
-                            <button type="submit" class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Send Message</button>
+                            <button type="submit" class="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Login</button>
                         </div>
                         <p class="text-base text-center text-gray-400" id="result">
                         </p>
