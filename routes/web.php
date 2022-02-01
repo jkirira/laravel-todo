@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ToDoController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,3 +41,10 @@ Route::post('/todo/{todo:id}/delete', [ToDoController::class, 'destroy'])->name(
 
 Route::get('/search', [ToDoController::class, 'search'])->name('search')->middleware('auth');
 Route::post('/search', [ToDoController::class, 'search'])->middleware('auth');
+
+Route::get('/posts', [PostController::class, 'index'])->name('posts')->middleware('auth');
+Route::get('/posts/get', [PostController::class, 'get'])->middleware('auth');
+Route::post('/posts/add', [PostController::class, 'add'])->middleware('auth');
+Route::post('/posts/edit', [PostController::class, 'edit'])->middleware('auth');
+Route::post('/posts/delete', [PostController::class, 'delete'])->middleware('auth');
+

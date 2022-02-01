@@ -72,9 +72,8 @@
         {{ $todos->links() }}
 
     @else
-        <div class="container mx-auto text-xl mt-6">
+        <div class="container mx-auto flex items-center justify-center text-xl">
             <h4>You have no ToDos</h4>
         </div>
     @endif
-
 @endsection
