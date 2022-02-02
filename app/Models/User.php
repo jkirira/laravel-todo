@@ -10,10 +10,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Laracasts\Presenter\PresentableTrait;
 
+use App\Models\Presenters\UserPresenter;
+use TheHiveTeam\Presentable\HasPresentable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, PresentableTrait;
+    use HasApiTokens, HasFactory, Notifiable, HasPresentable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +29,7 @@ class User extends Authenticatable
         'avatar'
     ];
 
-    protected $presenter = 'UserPresenter';
+    protected $presenter = UserPresenter::class;
 
     /**
      * The attributes that should be hidden for serialization.

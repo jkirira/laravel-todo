@@ -1,11 +1,13 @@
 <?php
-use Laracasts\Presenter\Presenter;
+namespace App\Models\Presenters;
 
-class UserPresenter extends Presenter {
+use TheHiveTeam\Presentable\Presenter;
 
-    public function fullName() {
-        return $this->first . ' ' . $this->last;
+class UserPresenter extends Presenter
+{
+    public function name()
+    {
+        return ucwords($this->model->name);
     }
-
 }
 ?>

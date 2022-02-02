@@ -2165,6 +2165,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2186,6 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
         body: '',
         userId: null
       },
+      search_tag: '',
       display_message: null,
       message_class: null
     };
@@ -2203,14 +2210,21 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    validate: function validate(post) {
+      if (!post.title || !post.body) {
+        this.display_message = "Cannot send empty values";
+        this.message_class = "bg-red-200 text-white";
+        return false;
+      }
+
+      return true;
+    },
     addPost: function addPost(e) {
       var _this2 = this;
 
       e.preventDefault();
 
-      if (!this.new_post.title || !this.new_post.body) {
-        this.display_message = "Cannot send empty values";
-        this.message_class = "border border-red-200 text-red-200";
+      if (!this.validate(this.new_post)) {
         return;
       }
 
@@ -2222,8 +2236,35 @@ __webpack_require__.r(__webpack_exports__);
         _this2.posts.unshift(response.data);
       }).then(function () {
         _this2.display_message = "Success";
-        _this2.message_class = "border border-green-200 text-green-200";
+        _this2.message_class = "bg-green-200 text-white";
       })["catch"](function (err) {
+        console.log("Error");
+        console.error('Error', err);
+      });
+    },
+    findPost: function findPost(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+
+      if (!this.search_tag) {
+        this.display_message = "Cannot send empty values";
+        this.message_class = "bg-red-200 text-white";
+        return;
+      }
+
+      var URL = 'http://laravel-todo.appp/posts/' + search_tag;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post(URL, this.new_post).then(function (response) {
+        console.log(response.data);
+
+        _this3.posts.unshift(response.data);
+      }).then(function () {
+        _this3.display_message = "Success";
+        _this3.message_class = "bg-green-200 text-white";
+      })["catch"](function (err) {
+        _this3.display_message = "Error: " + err;
+        _this3.message_class = "bg-green-200 text-white";
+        console.log("Error");
         console.error('Error', err);
       });
     },
@@ -2234,45 +2275,46 @@ __webpack_require__.r(__webpack_exports__);
       this.edit_post.userId = p.userId;
     },
     editPost: function editPost(e) {
-      var _this3 = this;
+      var _this4 = this;
 
       e.preventDefault();
 
-      if (!this.edit_post.title || !this.edit_post.body) {
-        this.display_message = "Cannot send empty values";
-        this.message_class = "border border-red-200 text-red-200";
+      if (!this.validate(this.edit_post)) {
         return;
       }
 
       var URL = 'http://laravel-todo.appp/posts/edit';
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(URL, this.edit_post).then(function (response) {
-        console.log(_this3.posts);
-        _this3.posts = _this3.posts.filter(function (post) {
+        console.log(_this4.posts);
+        _this4.posts = _this4.posts.filter(function (post) {
           return post.id != response.data.id;
         });
 
-        _this3.posts.unshift(response.data);
+        _this4.posts.unshift(response.data);
       }).then(function () {
-        _this3.display_message = "Success";
-        _this3.message_class = "border border-green-200 text-green-200";
+        _this4.display_message = "Success";
+        _this4.message_class = "bg-green-200 text-white";
       })["catch"](function (err) {
         console.error('Error', err);
       });
     },
     deletePost: function deletePost(p) {
-      var _this4 = this;
+      var _this5 = this;
 
-      var URL = 'http://laravel-todo.appp/posts/delete/';
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post(URL, p.id).then(function (response) {
+      var URL = 'http://laravel-todo.appp/posts/delete/' + p.id;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get(URL).then(function (response) {
         if (response.status == 200) {
-          _this4.display_message = "success";
-          _this4.message_class = "bg-green-200";
+          _this5.display_message = "success";
+          _this5.message_class = "bg-green-200";
+          _this5.posts = _this5.posts.filter(function (post) {
+            return post.id != p.id;
+          });
         } else {
-          _this4.display_message = "error";
-          _this4.message_class = "bg-red-200";
+          _this5.display_message = "error";
+          _this5.message_class = "bg-red-200";
         }
 
-        console.log(_this4.posts);
+        console.log(_this5.posts);
       })["catch"](function (err) {
         console.error('Error', err);
       });
@@ -3173,14 +3215,45 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "main-component" }, [
-    _c("div", { staticClass: "left max-h-[500px] " }, [
-      _vm._m(0),
+    _c("div", { staticClass: "left max-h-[700px] " }, [
+      _c("div", [
+        _c("form", [
+          _c("input", {
+            staticClass:
+              "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
+            attrs: {
+              type: "text",
+              name: "search",
+              id: "search",
+              placeholder: "search",
+              value: "",
+              required: "",
+            },
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            _vm._b(
+              {
+                staticClass:
+                  "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
+                attrs: { type: "submit" },
+                on: { click: _vm.findPost },
+              },
+              "button",
+              _vm.search_tag,
+              false
+            ),
+            [_vm._v("Search")]
+          ),
+        ]),
+      ]),
       _vm._v(" "),
       _c(
         "div",
         {
           staticClass:
-            "output border-2 border-gray-200 max-h-[800px] overflow-scroll mt-4",
+            "output border-2 border-gray-200 max-h-[500px] overflow-scroll mt-4",
         },
         [
           _vm.posts
@@ -3207,7 +3280,7 @@ var render = function () {
       ),
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "min-h-[500px]" }, [
+    _c("div", { staticClass: "h-[700px] flex justify-center " }, [
       _vm.display_message
         ? _c(
             "div",
@@ -3219,161 +3292,163 @@ var render = function () {
           )
         : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "flex justify-center" }, [
-        _c("form", { staticClass: "min-h-[500px] min-w-[500px] p-2" }, [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c("label", {}, [_vm._v("Title:")]),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.new_post.title,
-                  expression: "new_post.title",
-                },
-              ],
-              staticClass:
-                "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
-              attrs: {
-                type: "text",
-                name: "title",
-                placeholder: "title",
-                value: "",
-                required: "",
-              },
-              domProps: { value: _vm.new_post.title },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.new_post, "title", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c("label", {}, [_vm._v("Body:")]),
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.new_post.body,
-                  expression: "new_post.body",
-                },
-              ],
-              staticClass:
-                "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
-              attrs: { name: "body", placeholder: "body", required: "" },
-              domProps: { value: _vm.new_post.body },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.new_post, "body", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c(
-              "button",
-              {
+      _c("div", { staticClass: " w-[500px] flex overflow-scroll" }, [
+        _c("div", { staticClass: "flex justify-center w-screen" }, [
+          _c("form", { staticClass: "min-h-[500px] min-w-[500px] p-2" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c("label", {}, [_vm._v("Title:")]),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.new_post.title,
+                    expression: "new_post.title",
+                  },
+                ],
                 staticClass:
-                  "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
-                attrs: { type: "submit" },
-                on: { click: _vm.addPost },
-              },
-              [_vm._v("Add")]
-            ),
+                  "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
+                attrs: {
+                  type: "text",
+                  name: "title",
+                  placeholder: "title",
+                  value: "",
+                  required: "",
+                },
+                domProps: { value: _vm.new_post.title },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.new_post, "title", $event.target.value)
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c("label", {}, [_vm._v("Body:")]),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.new_post.body,
+                    expression: "new_post.body",
+                  },
+                ],
+                staticClass:
+                  "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
+                attrs: { name: "body", placeholder: "body", required: "" },
+                domProps: { value: _vm.new_post.body },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.new_post, "body", $event.target.value)
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
+                  attrs: { type: "submit" },
+                  on: { click: _vm.addPost },
+                },
+                [_vm._v("Add")]
+              ),
+            ]),
           ]),
         ]),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex justify-center" }, [
-        _c("form", { staticClass: "min-h-[500px] min-w-[500px] p-2" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c("label", {}, [_vm._v("Title:")]),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.edit_post.title,
-                  expression: "edit_post.title",
-                },
-              ],
-              staticClass:
-                "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
-              attrs: {
-                type: "text",
-                name: "title",
-                placeholder: "title",
-                required: "",
-              },
-              domProps: { value: _vm.edit_post.title },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.edit_post, "title", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c("label", {}, [_vm._v("Body:")]),
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.edit_post.body,
-                  expression: "edit_post.body",
-                },
-              ],
-              staticClass:
-                "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
-              attrs: {
-                name: "body",
-                id: "body",
-                rows: "10",
-                placeholder: "body",
-                required: "",
-              },
-              domProps: { value: _vm.edit_post.body },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.edit_post, "body", $event.target.value)
-                },
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "my-5 flex flex-column" }, [
-            _c(
-              "button",
-              {
+        _vm._v(" "),
+        _c("div", { staticClass: "flex justify-center w-screen" }, [
+          _c("form", { staticClass: "min-h-[500px] min-w-[500px] p-2" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c("label", {}, [_vm._v("Title:")]),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.edit_post.title,
+                    expression: "edit_post.title",
+                  },
+                ],
                 staticClass:
-                  "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
-                attrs: { type: "submit" },
-                on: { click: _vm.editPost },
-              },
-              [_vm._v("Edit")]
-            ),
+                  "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
+                attrs: {
+                  type: "text",
+                  name: "title",
+                  placeholder: "title",
+                  required: "",
+                },
+                domProps: { value: _vm.edit_post.title },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.edit_post, "title", $event.target.value)
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c("label", {}, [_vm._v("Body:")]),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.edit_post.body,
+                    expression: "edit_post.body",
+                  },
+                ],
+                staticClass:
+                  "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
+                attrs: {
+                  name: "body",
+                  id: "body",
+                  rows: "10",
+                  placeholder: "body",
+                  required: "",
+                },
+                domProps: { value: _vm.edit_post.body },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.edit_post, "body", $event.target.value)
+                  },
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-5 flex flex-column" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
+                  attrs: { type: "submit" },
+                  on: { click: _vm.editPost },
+                },
+                [_vm._v("Edit")]
+              ),
+            ]),
           ]),
         ]),
       ]),
@@ -3381,37 +3456,6 @@ var render = function () {
   ])
 }
 var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("form", [
-        _c("input", {
-          staticClass:
-            "px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 ",
-          attrs: {
-            type: "text",
-            name: "search",
-            id: "search",
-            placeholder: "search",
-            value: "",
-            required: "",
-          },
-        }),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass:
-              "p-2 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none",
-            attrs: { type: "submit" },
-          },
-          [_vm._v("Search")]
-        ),
-      ]),
-    ])
-  },
   function () {
     var _vm = this
     var _h = _vm.$createElement

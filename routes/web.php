@@ -46,5 +46,5 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts')->middlewar
 Route::get('/posts/get', [PostController::class, 'get'])->middleware('auth');
 Route::post('/posts/add', [PostController::class, 'add'])->middleware('auth');
 Route::post('/posts/edit', [PostController::class, 'edit'])->middleware('auth');
-Route::post('/posts/delete', [PostController::class, 'delete'])->middleware('auth');
+Route::get('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth');
 

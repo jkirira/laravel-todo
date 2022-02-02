@@ -53,8 +53,8 @@
                 <div>
                     <form action="{{ route('todos.complete', $todo->id) }}" method="POST" id="checkboxForm">
                         @csrf
+                        <input type="checkbox"  name="completed" id="markCompleted" class="text-4xl accent-indigo-500" {{ $todo->isCompleted() ? 'Checked' : '' }} >
                     </form>
-                    <input type="checkbox"  name="completed" id="markCompleted" class="text-4xl accent-indigo-500" {{ $todo->isCompleted() ? 'Checked' : '' }} ">
 
                     @if( $todo->status == 'completed' )
                        <strike><p>{{ $todo->text }}</p></strike>
