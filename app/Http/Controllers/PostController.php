@@ -6,10 +6,18 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Http;
 
+use GuzzleHttp\Client;
+
 
 
 class PostController extends Controller
 {
+
+    public function __construct(){
+        $client = new Client([ 'base_uri' => 'https://jsonplaceholder.typicode.com',]);
+    }
+
+
     public function index()
     {
         return view('posts');
@@ -20,29 +28,46 @@ class PostController extends Controller
     }
 
     public function get(Request $request){
-        $response = Http::get('https://jsonplaceholder.typicode.com/posts');
-        return $response->json();
+        $client = new Client();
+        $response = $client->request('GET', 'https://jsonplaceholder.typicode.com/posts');
+        return $response->getBody();
     }
 
     public function getId(Request $request) {
-        $URL = 'https://jsonplaceholder.typicode.com/posts/' + $request->tag;
-        $response = Http::get($URL);
-        return $response->json();
+        $client = new Client();
+        $response = $client->request('GET', '/posts/'.$request->tag );
+        return $response->getBody();
     }
 
 
     public function add(Request $request){
-        $response = Http::post( 'https://jsonplaceholder.typicode.com/posts', $request->only('title', 'body', 'userId'));
-        return $response->json();
+        $client = new Client();
+        $response = $client->request('POST', 'https://jsonplaceholder.typicode.com/posts', [
+            'form_params' => [
+                'title' => $request->title,
+                'body' => $request->body,
+                'userId' => $request->userId
+            ]
+        ]);
+        return $response->getBody();
     }
 
     public function edit(Request $request){
-        $response = Http::put( 'https://jsonplaceholder.typicode.com/posts/'.$request->postId, $request->only('title', 'body', 'userId'));
-        return $response->json();
+        $client = new Client();
+        $response = $client->request('PUT', 'https://jsonplaceholder.typicode.com/posts/'.$request->postId, [
+            'form_params' => [
+                'title' => $request->title,
+                'body' => $request->body,
+                'userId' => $request->userId
+            ]
+        ]);
+
+        return $response->getBody();
     }
 
-    public function delete(Request $request){
-        $response = Http::delete( 'https://jsonplaceholder.typicode.com/posts/'.$request->only('postId'));
-        return $response->json();
+    public function delete($id){
+        $client = new Client();
+        $response = $client->request('DELETE', 'https://jsonplaceholder.typicode.com/posts/'.$id);
+        return $response->getBody();
     }
 }

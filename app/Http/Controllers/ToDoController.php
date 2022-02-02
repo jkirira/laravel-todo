@@ -142,11 +142,12 @@ class ToDoController extends Controller
         ]);
 //        $todo->save();
 
-        $todos = auth()->user()->todos()->paginate(2);
-
-        return view('home', [
-            'todos' => $todos
-        ]);
+//        $todos = auth()->user()->todos()->paginate(2);
+//
+//        return view('home', [
+//            'todos' => $todos
+//        ]);
+        return view('home');
     }
 
     /**

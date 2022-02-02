@@ -23,11 +23,7 @@ class RegisterController extends Controller
 
         $path = Storage::putFile('public/images', $request->file('image'));
 
-
-
-        $path = $request->file('avatar')->store('avatars');
-
-
+//        $path = $request->file('avatar')->store('avatars');
 
 
         $user = User::create([
