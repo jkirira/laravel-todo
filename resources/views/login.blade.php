@@ -30,7 +30,7 @@
                         </div>
                         <div class="mb-6">
                             <label for="password" class="text-sm text-gray-600">Password</label>
-                            <input type="text" name="password" id="password" placeholder="password" required class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 " />
+                            <input type="password" name="password" id="password" placeholder="password" required class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 " />
                             @error('password')
                             <div>
                                 {{message}}

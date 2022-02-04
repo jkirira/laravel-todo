@@ -21,18 +21,19 @@ class RegisterController extends Controller
             'password' => 'required'
         ]);
 
-        $path = Storage::putFile('public/images', $request->file('image'));
+        $path = null;
 
-//        $path = $request->file('avatar')->store('avatars');
+        if( $request->file('image') ){
+            $path = Storage::putFile('public/images', $request->file('image'));
+        }
 
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'avatar' => $path
+            'avatar' => $path ? $path : ''
         ]);
-
 
 
         auth()->attempt([

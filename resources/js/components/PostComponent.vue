@@ -1,5 +1,5 @@
 <template>
-    <div class="border border-gray-200 rounded-1 p-7">
+    <div class="border border-gray-200 rounded-1 p-7 m-2 bg-gray-100">
         <p>Id: {{post.id}} </p>
         <p>Title: {{post.title}}</p>
         <p>Body: {{post.body}}</p>

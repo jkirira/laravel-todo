@@ -2,9 +2,9 @@
 # You did it!
 
 Well Done, {{ $user->name }}
-You have successfully completed {{ $todo->text }}
+You have successfully completed " {{ $todo->text }} "<br>
 Good Job!
 
 Thanks,<br>
-{{ config('app.name') }}
+Task Manager.
 @endcomponent

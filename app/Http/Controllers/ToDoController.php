@@ -7,6 +7,7 @@ use App\Models\ToDo;
 use Illuminate\Http\Request;
 use App\Notifications\SendMail;
 use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert as Alert;
 
 
 class ToDoController extends Controller
@@ -18,11 +19,9 @@ class ToDoController extends Controller
      */
     public function index()
     {
-        $todos = auth()->user()->todos()->paginate(2);
+        $todos = auth()->user()->todos()->orderByDesc('created_at')->orderByDesc('updated_at')->paginate(2);
 
-        return view('home', [
-            'todos' => $todos
-        ]);
+      return view('home', [ 'todos' => $todos ]);
     }
 
     /**
@@ -47,19 +46,20 @@ class ToDoController extends Controller
             'text' => 'required'
         ]);
 
+
+        if ( preg_match("/[0-9]/", $request->text ) ) {
+            Alert::error('Error', "Cannot have number inputs");
+            return $this->index();
+        }
+
 //        dd(auth()->user()->todos);
-        auth()->user()->todos()->create([
+        $todo = auth()->user()->todos()->create([
             'text' => $request->text,
             'status'=> 'incomplete',
         ]);
 
-//        ToDo::create([
-//            'text' => $request->text,
-//            'status'=> 'incomplete',
-//            'user_id'=>auth()->user()->id
-//        ]);
-
-        return back();
+        Alert::success('Success', "Task $todo->text added");
+        return $this->index();
     }
 
     /**
@@ -76,9 +76,7 @@ class ToDoController extends Controller
             $todos = auth()->user()->todos()->where('text', 'LIKE', "%$request->search%")->get();
         }
 
-        return view('search', [
-            'todos' => $todos
-        ]);
+        return view('search', [ 'todos' => $todos ]);
     }
 
     /**
@@ -89,9 +87,7 @@ class ToDoController extends Controller
      */
     public function edit(ToDo $todo)
     {
-        return view('edit', [
-            'todo' => $todo
-        ]);
+        return view('edit', [ 'todo' => $todo ]);
     }
 
     public function toggleCompletion(Request $request)
@@ -107,23 +103,18 @@ class ToDoController extends Controller
                 $user = auth()->user();
 
                 Mail::to($user)->send(new TaskCompleted($user, $todo));
-
             }
 
 //            dd($todo->status);
-
             $todo->save();
 
         } else {
-            return back()->with('status', 'Error');
+            Alert::warning('Error', 'Something went wrong');
+            return $this->index();
         }
 
-
-        $todos = auth()->user()->todos()->paginate(2);
-
-        return view('home', [
-            'todos' => $todos
-        ]);
+        Alert::success('Success', "$todo->text marked as $todo->status");
+        return $this->index();
     }
 
     /**
@@ -135,19 +126,18 @@ class ToDoController extends Controller
      */
     public function update(Request $request, ToDo $todo)
     {
-        $todo = ToDo::where('id', $request->id);
-//        $todo->text = $request->text;
-        $todo->update([
-            'text' => $request->text
-        ]);
-//        $todo->save();
+        $todo = ToDo::find($request->id);
+//        $todo->update([ 'text' = $request->text ]);
+        if($todo){
+            $todo->text = $request->text;
+            $todo->save();
+        } else {
+            Alert::success('Warning', "Could not find Post");
+        }
 
-//        $todos = auth()->user()->todos()->paginate(2);
-//
-//        return view('home', [
-//            'todos' => $todos
-//        ]);
-        return view('home');
+        Alert::success('Success', "$todo->text updated");
+
+        return $this->index();
     }
 
     /**
@@ -159,7 +149,6 @@ class ToDoController extends Controller
     public function destroy(Request $request, ToDo $todo)
     {
         $todo->delete();
-
         return redirect(route('todos'));
     }
 }

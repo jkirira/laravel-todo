@@ -28,6 +28,12 @@ Vue.component('posts', require('./components/Posts.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import VueSweetalert2 from 'vue-sweetalert2';
+
+// If you don't need the styles, do not connect
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+Vue.use(VueSweetalert2);
 
 
 const app = new Vue({

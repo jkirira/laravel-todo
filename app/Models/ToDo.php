@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Presenters\ToDoPresenter;
+use TheHiveTeam\Presentable\HasPresentable;
 
 class ToDo extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasPresentable;
+
+    protected $presenter = ToDoPresenter::class;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +21,7 @@ class ToDo extends Model
      */
     protected $fillable = [
         'text',
+        'status'
     ];
 
     public function isCompleted(){
