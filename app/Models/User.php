@@ -28,6 +28,8 @@ class User extends Authenticatable
         'password',
         'avatar'
     ];
+    protected $model = User::class;
+
 
     protected $presenter = UserPresenter::class;
 

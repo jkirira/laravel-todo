@@ -22,14 +22,6 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');
-Route::post('/register ', [RegisterController::class, 'store'])->middleware('guest');
-
-Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
-Route::post('/login ', [LoginController::class, 'store'])->middleware('guest');
-
-Route::post('/logout', [LogoutController::class, 'store'])->name('logout')->middleware('auth');
-
 Route::get('/todo', [ToDoController::class, 'index'])->name('todos')->middleware('auth');
 Route::post('/todo', [ToDoController::class, 'store'])->middleware('auth');
 
@@ -47,4 +39,8 @@ Route::get('/posts/get', [PostController::class, 'get'])->middleware('auth');
 Route::post('/posts/add', [PostController::class, 'add'])->middleware('auth');
 Route::post('/posts/edit', [PostController::class, 'edit'])->middleware('auth');
 Route::get('/posts/delete/{id}', [PostController::class, 'delete'])->middleware('auth');
+
+Auth::routes();
+
+Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

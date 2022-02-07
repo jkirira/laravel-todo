@@ -1,74 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/nav.js') }}" defer></script>
-    <script src="{{ asset('js/jquery-3.6.0.slim.js') }}" ></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" defer>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <title>ToDo</title>
-
-
+    
+    <!-- Styles -->
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
+<body class="bg-gray-100 h-screen antialiased leading-none font-sans">
+    <div id="app">
+        <header class="bg-blue-900 py-6">
+            <div class="container mx-auto flex justify-between items-center px-6">
+                <div>
+                    <a href="{{ url('/') }}" class="text-lg font-semibold text-gray-100 no-underline">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                </div>
+                <nav class="space-x-4 text-gray-300 text-sm sm:text-base">
+                    @guest
+                        <a class="no-underline hover:underline" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        @if (Route::has('register'))
+                            <a class="no-underline hover:underline" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        @endif
+                    @else
+                        <span>{{ Auth::user()->name }}</span>
 
-<body>
-@include('sweetalert::alert')
-<div id="app" class="flex flex-col justify-between min-h-screen  ">
-
-    <div id="menu_bar" class="header bg-black flex  text-white h-1/6 sm:items-start sm:flex-column md:items-center md:flex-row md:justify-between relative">
-
-        <div id="logo" class="logo p-6 text-3xl flex items-center justify-center" ><a href="{{ route('todos')  }}">ToDos</a></div>
-        <div id="NavBarToggle" class="hamburger-div md:hidden">Menu</div>
-        <div id="nav" class="logo text-3xl justify-around items-center hidden sm:hidden sm:pl-2  sm:flex-column md:block md:flex lg:flex md:flex-row md:items-center md:justify-center">
-
-                <div class="p-4 text-center"><a href="{{ route('todos') }}" >Home</a></div>
-                 @if( !auth()->user() )
-                    <div class="p-4 text-center"><a href="{{ route('register') }}" >Register</a></div>
-                    <div class="p-4 text-center"><a href="{{ route('login') }}" >Login</a></div>
-                @else
-                    <div class="p-4 text-center"><a href="{{ route('posts') }}">Posts</a></div>
-                    <div class="p-4 text-center"><a href="{{ route('search') }}">Search</a></div>
-                    <form action="{{ route('logout') }}" method="POST" class="p-2 my-0 text-center">
-                        @csrf
-                        <button class="p-4 text-center" type="submit">Logout</button>
-                    </form>
-
-                    <div class="avatar w-[150px] h-[150px] items-center justify-center hidden md:flex">
-                        <img src ="{{ Storage::url( auth()->user()->avatar ) }}" alt="profile picture" class="max-w-[100%]">
-                    </div>
-
-            @endif
-        </div>
-
-    </div>
-
-    <div class="body  px-2 py-8 flex-grow">
+                        <a href="{{ route('logout') }}"
+                           class="no-underline hover:underline"
+                           onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                            {{ csrf_field() }}
+                        </form>
+                    @endguest
+                </nav>
+            </div>
+        </header>
 
         @yield('content')
-
     </div>
-
-
-
-</div>
-
-<div class="footer bg-black text-white flex items-center justify-center h-16">
-    <div class="flex items-center justify-center md:flex-row md:space-around">
-        @if( auth()->user() )
-            <p class="px-2">{{auth()->user()->name}}</p>
-            <p class="px-2">{{auth()->user()->email}}</p>
-        @endif
-    </div>
-</div>
 </body>
-{{--<script src="../../../public/js/index.js" defer></script>--}}
-<script src="{{ asset('js/index.js') }}" defer></script>
-<script src="sweetalert2.all.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-
-
 </html>
