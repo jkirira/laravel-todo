@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('login');
-});
+//Route::get('/', function () {
+//    return view('login');
+//});
 
 Route::get('/todo', [ToDoController::class, 'index'])->name('todos')->middleware('auth');
 Route::post('/todo', [ToDoController::class, 'store'])->middleware('auth');
