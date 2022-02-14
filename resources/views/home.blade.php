@@ -59,6 +59,11 @@
                         @endif
                         <span class="px-2">
                             <form action="{{ route('todos.remove', $todo) }}" method="POST">
+
+
+
+
+
                                 @csrf
 
                                 <button class="deleteButton" type="submit">Delete</button>
