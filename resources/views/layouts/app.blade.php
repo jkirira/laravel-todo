@@ -19,22 +19,29 @@
 @include('sweetalert::alert')
 <div id="app" class="flex flex-col justify-between min-h-screen  ">
 
-    <div id="menu_bar" class="header bg-black flex  text-white h-1/6 sm:items-start sm:flex-column md:items-center md:flex-row md:justify-between relative">
+    <div id="menu_bar" class="header bg-black flex flex-col text-white h-1/6 items-start md:items-center md:flex-row md:justify-between relative">
 
-        <div id="logo" class="logo p-6 text-3xl flex items-center justify-center" ><a href="{{ route('todos')  }}">ToDos</a></div>
-        <div id="NavBarToggle" class="hamburger-div md:hidden">Menu</div>
-        <div id="nav" class="logo text-3xl justify-around items-center hidden sm:hidden sm:pl-2  sm:flex-column md:block md:flex lg:flex md:flex-row md:items-center md:justify-center">
+        <div id="logo" class="logo w-full p-6 text-3xl flex md:items-center relative " >
+            <a href="{{ route('todos')  }}" class="hover:no-underline">
+                <div class="p-4 hover:bg-white hover:text-black text-center">
+                    ToDos
+                </div>
+            </a>
+            <div id="NavBarToggle" class="hamburger-div md:hidden">Menu</div>
+        </div>
 
-                <div class="p-4 text-center"><a href="{{ route('todos') }}" >Home</a></div>
+        <div id="nav" class="logo text-3xl justify-around items-center hidden sm:pl-2  sm:flex-column md:block md:flex lg:flex md:flex-row md:items-center md:justify-center">
+
+            <a class="no-underline" href="{{ route('todos') }}" ><div class="p-4 hover:bg-white hover:text-black text-center">Home</div></a>
                  @if( !auth()->user() )
-                    <div class="p-4 text-center"><a href="{{ route('register') }}" >Register</a></div>
-                    <div class="p-4 text-center"><a href="{{ route('login') }}" >Login</a></div>
+                <a class="no-underline" href="{{ route('register') }}" ><div class="p-4 text-center hover:bg-white hover:text-black">Register</div></a>
+        <a class="no-underline" href="{{ route('login') }}" ><div class="p-4 text-center hover:bg-white hover:text-black">Login</div></a>
                 @else
-                    <div class="p-4 text-center"><a href="{{ route('posts') }}">Posts</a></div>
-                    <div class="p-4 text-center"><a href="{{ route('search') }}">Search</a></div>
+        <a class="no-underline" href="{{ route('posts') }}"><div class="p-4 text-center hover:bg-white hover:text-black">Posts</div></a>
+<a class="no-underline" href="{{ route('search') }}"><div class="p-4 text-center hover:bg-white hover:text-black">Search</div></a>
                     <form action="{{ route('logout') }}" method="POST" class="p-2 my-0 text-center">
                         @csrf
-                        <button class="p-4 text-center" type="submit">Logout</button>
+                        <button class="p-4 text-center hover:bg-white hover:text-black" type="submit">Logout</button>
                     </form>
 
                     <div class="avatar w-[150px] h-[150px] items-center justify-center hidden md:flex">

@@ -143,30 +143,6 @@ export default {
             })
         },
 
-        findPost(e){
-            e.preventDefault();
-            if( !this.search_tag ){
-                this.display_message = "Cannot send empty values"
-                this.message_class = "bg-red-200 text-white"
-                return;
-            }
-
-            let URL = 'http://laravel-todo.appp/posts/' + search_tag
-            axios.post(URL, this.new_post)
-                .then((response) => {
-                    console.log(response.data)
-                    this.posts.unshift( response.data )
-                }).then(() => {
-                    this.display_message = "Success"
-                    this.message_class = "bg-green-200 text-white"
-                }).catch((err) => {
-                    this.display_message = "Error: "+ err
-                    this.message_class = "bg-green-200 text-white"
-                    console.log("Error")
-                    console.error('Error', err)
-                })
-        },
-
         stagePost(p){
             this.edit_post.postId = p.id
             this.edit_post.title = p.title
